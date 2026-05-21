@@ -1,0 +1,79 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "title": "章节状态",
+  "description": "论文章节的状态追踪Schema",
+  "type": "object",
+  "properties": {
+    "chapter_id": {
+      "type": "integer",
+      "description": "章节编号"
+    },
+    "chapter_name": {
+      "type": "string",
+      "description": "章节名称"
+    },
+    "word_count": {
+      "type": "integer",
+      "description": "章节字数"
+    },
+    "risk_assessment": {
+      "type": "object",
+      "properties": {
+        "ai_risk": {
+          "type": "string",
+          "enum": ["高", "中", "低"],
+          "description": "AI检测风险等级"
+        },
+        "plagiarism_risk": {
+          "type": "string",
+          "enum": ["高", "中", "低"],
+          "description": "查重风险等级"
+        },
+        "format_issues": {
+          "type": "integer",
+          "description": "格式问题数量"
+        }
+      }
+    },
+    "status": {
+      "type": "string",
+      "enum": ["pending", "in_progress", "completed", "needs_rework", "verified"],
+      "description": "章节状态"
+    },
+    "optimization_progress": {
+      "type": "object",
+      "properties": {
+        "ai_reduction": {
+          "type": "string",
+          "enum": ["pending", "in_progress", "completed"],
+          "description": "降AI优化状态"
+        },
+        "plagiarism_reduction": {
+          "type": "string",
+          "enum": ["pending", "in_progress", "completed"],
+          "description": "降重优化状态"
+        },
+        "polishing": {
+          "type": "string",
+          "enum": ["pending", "in_progress", "completed"],
+          "description": "学术润色状态"
+        },
+        "format_check": {
+          "type": "string",
+          "enum": ["pending", "in_progress", "completed"],
+          "description": "格式检查状态"
+        }
+      }
+    },
+    "revision_count": {
+      "type": "integer",
+      "description": "修订次数"
+    },
+    "last_updated": {
+      "type": "string",
+      "format": "date-time",
+      "description": "最后更新时间"
+    }
+  },
+  "required": ["chapter_id", "chapter_name", "status"]
+}

@@ -1,0 +1,30 @@
+# Python
+__pycache__/
+*.py[cod]
+*$py.class
+*.so
+.Python
+env/
+venv/
+.venv/
+
+# IDE
+.vscode/
+.idea/
+*.swp
+*.swo
+
+# OS
+.DS_Store
+Thumbs.db
+
+# Project specific
+thesis_overview.md
+chapter_*.md
+evaluation_report.md
+revision_log*.md
+optimized_thesis.md
+*.log
+
+# Claude Code local settings
+.claude/settings.local.json

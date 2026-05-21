@@ -1,0 +1,8 @@
+{
+  "SessionStart": [
+    {
+      "type": "command",
+      "command": "echo '论文优化系统已加载。可用命令：/thesis-init, /thesis-optimize, /thesis-ai, /thesis-plagiarism, /thesis-polish, /thesis-check'"
+    }
+  ]
+}
