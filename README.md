@@ -1,156 +1,124 @@
-# Thesis Optimizer V2 — 中文学术论文四维智能优化系统
+# Thesis Optimizer — 中文学术论文智能优化系统
 
-> 面向硕博研究生的学术论文智能优化 Agent Skill 套件
+> 面向硕博研究生的学术论文多维智能优化 Agent Skill
 
-## 核心功能
+## 核心能力
 
-| 维度 | 目标 | 评估指标 |
-|------|------|---------|
-| 降AI检测率 | AI检测率 < 20% | GPTZero, Originality.ai |
-| 降查重率 | 查重率 < 10% | 知网, 维普 |
-| 学术润色 | 学术质量显著提升 | 人工评审 |
-| 格式规范 | 符合目标院校要求 | 模板校验 |
+| 优化维度 | 目标 | 验证方式 |
+|----------|------|----------|
+| AI检测降痕 | AI检测率 < 20% | GPTZero / Originality.ai |
+| 查重降重 | 查重率 < 10% | 知网 / 维普 |
+| 学术润色 | 表达质量显著提升 | 人工评审 |
+| 格式规范 | 符合院校要求 | 模板校验 |
 
-## 架构设计
+## 系统架构
 
-### 多Agent协作
+采用多 Agent 协作架构，各 Agent 职责独立、互相制约：
+
+```
+论文输入 → [analyzer] 风险扫描
+                ↓
+        生成总揽文档
+                ↓
+     ┌──────────┼──────────┐
+     ↓          ↓          ↓
+ [ai_reduction] [plagiarism] [polishing]
+  降AI检测      降查重       学术润色
+     ↓          ↓          ↓
+     └──────────┼──────────┘
+                ↓
+          [format] 格式规范
+                ↓
+        [evaluator] 质量评估
+                ↓
+         达标 → 完成
+         未达标 → 返工
+```
+
+## Agent 列表
 
 | Agent | 职责 |
 |-------|------|
-| **analyzer** | 扫描论文，识别风险段落 |
-| **ai_reduction** | 执行降AI检测优化 |
-| **plagiarism** | 执行降查重优化 |
-| **polishing** | 执行学术润色 |
-| **format** | 执行格式规范检查 |
-| **evaluator** | 独立评估优化质量 |
-
-### 项目结构
-
-```
-thesis-optimizer-v2/
-├── SKILL.md                          # 技能入口定义
-├── README.md                         # 项目文档
-├── USAGE_GUIDE.md                    # 使用指南
-├── agents/                           # 6个Agent定义
-│   ├── analyzer_agent.md
-│   ├── ai_reduction_agent.md
-│   ├── plagiarism_agent.md
-│   ├── polishing_agent.md
-│   ├── format_agent.md
-│   └── evaluator_agent.md
-├── commands/                         # 6个Slash命令
-│   ├── thesis-init.md
-│   ├── thesis-optimize.md
-│   ├── thesis-ai.md
-│   ├── thesis-plagiarism.md
-│   ├── thesis-polish.md
-│   └── thesis-check.md
-├── templates/                        # 文档模板
-│   ├── master_overview_template.md
-│   ├── chapter_task_template.md
-│   └── revision_log_template.md
-├── references/                       # 策略知识库
-│   ├── ai_pattern_taxonomy.md
-│   ├── ai_vocabulary_blacklist.md
-│   ├── perplexity_burstiness.md
-│   ├── strategy_ai_reduction.md
-│   ├── strategy_plagiarism.md
-│   ├── strategy_polishing.md
-│   ├── evaluation_criteria.md
-│   └── discipline_profiles/          # 学科画像
-│       ├── cs_profile.md
-│       ├── ee_profile.md
-│       ├── me_profile.md
-│       └── general_profile.md
-├── shared/                           # 共享资源
-│   ├── contracts/
-│   └── schemas/
-├── scripts/                          # Python辅助脚本
-│   ├── text_stats.py
-│   ├── ai_vocab_checker.py
-│   └── diff_viewer.py
-├── hooks/                            # 生命周期钩子
-│   └── hooks.json
-└── tests/                            # 测试
-    └── fixtures/
-        └── sample_thesis.md
-```
+| analyzer | 全文扫描，识别风险段落 |
+| ai_reduction | 消除AI写作痕迹 |
+| plagiarism | 深度语义改写降重 |
+| polishing | 学术表达润色 |
+| format | 格式规范检查 |
+| evaluator | 独立质量评估（含反逢迎机制） |
 
 ## 可用命令
 
 | 命令 | 功能 |
 |------|------|
-| `/thesis-init` | 初始化优化项目，分析论文结构 |
+| `/thesis-init` | 初始化项目，分析论文结构 |
 | `/thesis-optimize` | 全流程四维优化 |
 | `/thesis-ai` | 仅降AI检测率 |
 | `/thesis-plagiarism` | 仅降查重率 |
 | `/thesis-polish` | 仅学术润色 |
 | `/thesis-check` | 质量检查与评估报告 |
 
-## 安装方式
+## 项目结构
 
-### Claude Code
-
-```bash
-# 克隆到 skills 目录
-git clone <repo-url> ~/.claude/skills/thesis-optimizer-v2
+```
+├── SKILL.md                  # 技能入口
+├── README.md                 # 项目文档
+├── USAGE_GUIDE.md            # 使用指南
+├── agents/                   # Agent 定义
+├── commands/                 # 命令定义
+├── templates/                # 文档模板
+├── references/               # 策略知识库
+│   └── discipline_profiles/  # 学科画像
+├── shared/                   # 共享资源
+├── scripts/                  # Python 辅助工具
+├── hooks/                    # 生命周期钩子
+└── tests/                    # 测试
 ```
 
-### Codex
+## 安装
 
 ```bash
-# 克隆到 skills 目录
-git clone <repo-url> ~/.codex/skills/thesis-optimizer-v2
-```
+# Claude Code
+git clone <repo-url> ~/.claude/skills/thesis-optimizer
 
-### 其他Agent
-
-```bash
-# 克隆到通用 skills 目录
-git clone <repo-url> ~/.agent/skills/thesis-optimizer-v2
+# Codex
+git clone <repo-url> ~/.codex/skills/thesis-optimizer
 ```
 
 ## 快速开始
 
-1. 安装技能到对应Agent的skills目录
-2. 在论文项目目录中启动Agent
-3. 执行 `/thesis-init` 初始化项目
-4. 执行 `/thesis-optimize` 开始全流程优化
+1. 安装技能到 Agent 的 skills 目录
+2. 在论文项目目录中启动 Agent
+3. 执行 `/thesis-init` 初始化
+4. 执行 `/thesis-optimize` 开始优化
 5. 执行 `/thesis-check` 查看评估报告
 
 ## 适用范围
 
-- **目标用户**：硕博研究生
-- **论文格式**：LaTeX (.tex) 和 Markdown (.md)
-- **语言**：中文论文（英文支持计划中）
+- **用户**：硕博研究生
+- **格式**：LaTeX (.tex) / Markdown (.md)
+- **语言**：中文论文
 - **学科**：计算机科学、电子工程、机械工程、通用
 
-## 核心设计原则
+## 设计约束
 
-### ⚠️ IRON RULE — 最小干预
+### 最小干预原则
 
 - 修改范围严格限制在单句内
-- 绝不大段推翻重写
+- 不大段推翻重写
 - 保留原始逻辑和思维跳跃
-- 专业术语永远保护原文
+- 专业术语始终保护原文
 
-### ⚠️ IRON RULE — 内容边界
+### 内容边界
 
-以下内容绝不修改：
-- 研究贡献与核心论点
-- 实验数据、数值结果
-- 公式、图表
-- 引用文献
-- 作者姓名、机构信息
+以下内容绝不修改：研究贡献、实验数据、公式、图表、引用文献、作者信息
 
-### ⚠️ IRON RULE — 优先级体系
+### 优先级体系
 
-冲突解决优先级：
-1. P1 硬约束 — 事实、数据、公式、引用不可动
-2. P2 学科规范 — 遵循目标学科写作惯例
-3. P3 降AI策略 — 句式多样化、语气自然化
-4. P4 降重策略 — 语义改写、句式重组
-5. P5 润色策略 — 表达精准化、可读性优化
+1. P1 — 事实、数据、公式、引用不可动
+2. P2 — 学科写作规范
+3. P3 — 降AI策略
+4. P4 — 降重策略
+5. P5 — 润色策略
 
 ## 许可证
 

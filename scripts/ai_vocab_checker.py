@@ -11,7 +11,6 @@ import argparse
 from pathlib import Path
 
 
-# 高风险词汇（出现即标记）
 HIGH_RISK_WORDS = [
     "值得注意的是", "综上所述", "不难发现", "显而易见", "毋庸置疑",
     "众所周知", "在当今社会", "随着", "具有重要意义", "取得了显著成果",
@@ -20,14 +19,12 @@ HIGH_RISK_WORDS = [
     "总而言之", "概括来说", "综合来看",
 ]
 
-# 中风险词汇（连续出现2次以上标记）
 MEDIUM_RISK_WORDS = [
     "本文提出", "本文认为", "实验结果表明", "该方法具有",
     "通过分析可以发现", "在此基础上", "然而", "但是", "尽管如此",
     "研究表明", "文献指出", "理论上",
 ]
 
-# 低风险词汇（密集使用标记）
 LOW_RISK_WORDS = [
     "因此", "所以", "由此", "基于此",
     "具有", "能够", "可以", "采用",
@@ -59,7 +56,6 @@ def analyze_text(text: str) -> dict:
     total_medium = sum(m["count"] for m in medium_matches)
     total_low = sum(m["count"] for m in low_matches)
 
-    # 风险评估
     risk_level = "安全"
     if total_high > 5:
         risk_level = "高风险"
@@ -103,22 +99,13 @@ def format_output(result: dict, fmt: str) -> str:
         "",
     ]
 
-    if result["details"]["high_risk"]:
-        lines.append("高风险词汇详情：")
-        for match in result["details"]["high_risk"]:
-            lines.append(f"  「{match['word']}」出现 {match['count']} 次")
-        lines.append("")
-
-    if result["details"]["medium_risk"]:
-        lines.append("中风险词汇详情：")
-        for match in result["details"]["medium_risk"]:
-            lines.append(f"  「{match['word']}」出现 {match['count']} 次")
-        lines.append("")
-
-    if result["details"]["low_risk"]:
-        lines.append("低风险词汇详情：")
-        for match in result["details"]["low_risk"]:
-            lines.append(f"  「{match['word']}」出现 {match['count']} 次")
+    for level in ["high_risk", "medium_risk", "low_risk"]:
+        if result["details"][level]:
+            label = {"high_risk": "高风险", "medium_risk": "中风险", "low_risk": "低风险"}[level]
+            lines.append(f"{label}词汇详情：")
+            for match in result["details"][level]:
+                lines.append(f"  「{match['word']}」出现 {match['count']} 次")
+            lines.append("")
 
     lines.append("=" * 50)
     return "\n".join(lines)

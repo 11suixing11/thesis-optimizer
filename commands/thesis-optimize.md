@@ -1,6 +1,6 @@
 ---
 name: thesis-optimize
-description: 全流程四维优化 — 依次执行降AI、降重、润色、格式规范
+description: 全流程优化 — 依次执行降AI、降重、润色、格式规范
 ---
 
 # /thesis-optimize
@@ -26,7 +26,7 @@ description: 全流程四维优化 — 依次执行降AI、降重、润色、格
 4. 更新章节任务文档状态
 
 ### 阶段3：学术润色
-1. 调用 `agents/polishing_agent.md` 对全文进行润色
+1. 调用 `agents/polishing_agent.md` 对全文润色
 2. 按表达精准化、学术规范性、可读性三个维度优化
 3. 记录修订日志
 4. 更新章节任务文档状态

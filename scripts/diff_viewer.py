@@ -20,18 +20,6 @@ def read_file(file_path: str) -> list[str]:
         sys.exit(1)
 
 
-def generate_diff(original_lines: list[str], revised_lines: list[str]) -> list[str]:
-    """生成统一格式的diff"""
-    return list(difflib.unified_diff(
-        original_lines,
-        revised_lines,
-        fromfile='原文',
-        tofile='优化后',
-        lineterm='',
-        n=3
-    ))
-
-
 def generate_side_by_side(original_lines: list[str], revised_lines: list[str]) -> list[tuple]:
     """生成并排对比"""
     diff = list(difflib.ndiff(original_lines, revised_lines))
@@ -79,17 +67,16 @@ def format_markdown(original_lines: list[str], revised_lines: list[str]) -> str:
             lines.append(f"### 对比 {i}")
             lines.append("")
             lines.append("**原文：**")
-            lines.append(f"```")
+            lines.append("```")
             lines.append(orig.strip())
-            lines.append(f"```")
+            lines.append("```")
             lines.append("")
             lines.append("**优化后：**")
-            lines.append(f"```")
+            lines.append("```")
             lines.append(rev.strip())
-            lines.append(f"```")
+            lines.append("```")
             lines.append("")
 
-    # 统计修改数量
     changed_count = sum(1 for o, r in pairs if o != r)
     lines.extend([
         "## 总结",

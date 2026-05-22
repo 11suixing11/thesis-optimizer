@@ -1,6 +1,6 @@
 #!/usr/bin/env python3
 """
-文本统计工具 — 计算句长标准差、TTR（词汇丰富度）、词汇密度等指标
+文本统计工具 — 计算句长标准差、TTR（词汇丰富度）等指标
 用法: python text_stats.py <file_path> [--format json|text]
 """
 
@@ -13,7 +13,6 @@ from pathlib import Path
 
 def split_sentences(text: str) -> list[str]:
     """中英文分句"""
-    # 按中文句号、问号、叹号、英文句号分句
     sentences = re.split(r'[。！？.!?]+', text)
     return [s.strip() for s in sentences if s.strip()]
 
@@ -24,13 +23,11 @@ def split_words_chinese(text: str) -> list[str]:
     current_word = ""
     for char in text:
         if '一' <= char <= '鿿':
-            # 中文字符
             if current_word:
                 words.append(current_word)
                 current_word = ""
             words.append(char)
         elif char.isalnum():
-            # 英文或数字
             current_word += char
         else:
             if current_word:
@@ -65,35 +62,30 @@ def calc_ttr(text: str) -> float:
     return len(unique_words) / len(words)
 
 
-def calc_avg_sentence_length(lengths: list[int]) -> float:
-    """计算平均句长"""
-    if not lengths:
-        return 0.0
-    return sum(lengths) / len(lengths)
-
-
 def analyze_text(text: str) -> dict:
     """分析文本并返回统计结果"""
     sentence_lengths = calc_sentence_lengths(text)
     words = split_words_chinese(text)
     unique_words = set(words)
+    std_dev = calc_std_dev(sentence_lengths)
+    ttr = calc_ttr(text)
 
     return {
         "total_chars": len(text),
         "total_sentences": len(sentence_lengths),
         "total_words": len(words),
         "unique_words": len(unique_words),
-        "avg_sentence_length": round(calc_avg_sentence_length(sentence_lengths), 2),
-        "sentence_length_std_dev": round(calc_std_dev(sentence_lengths), 2),
-        "ttr": round(calc_ttr(text), 4),
+        "avg_sentence_length": round(sum(sentence_lengths) / max(len(sentence_lengths), 1), 2),
+        "sentence_length_std_dev": round(std_dev, 2),
+        "ttr": round(ttr, 4),
         "sentence_lengths": sentence_lengths,
         "risk_assessment": {
-            "sentence_diversity": "高风险" if calc_std_dev(sentence_lengths) < 3 else
-                                  "中风险" if calc_std_dev(sentence_lengths) < 5 else
-                                  "低风险" if calc_std_dev(sentence_lengths) < 8 else "安全",
-            "vocabulary_richness": "高风险" if calc_ttr(text) < 0.4 else
-                                   "中风险" if calc_ttr(text) < 0.5 else
-                                   "低风险" if calc_ttr(text) < 0.6 else "安全"
+            "sentence_diversity": "高风险" if std_dev < 3 else
+                                  "中风险" if std_dev < 5 else
+                                  "低风险" if std_dev < 8 else "安全",
+            "vocabulary_richness": "高风险" if ttr < 0.4 else
+                                   "中风险" if ttr < 0.5 else
+                                   "低风险" if ttr < 0.6 else "安全"
         }
     }
 
